@@ -1,0 +1,179 @@
+openapi: 3.1.0
+info:
+  title: Space Cockpit Demo Internal API
+  version: 0.1.0
+  description: Internal (conceptual) service contracts derived from feature behaviors.
+servers:
+  - url: http://localhost/internal
+paths:
+  /telemetry:
+    get:
+      summary: Get latest telemetry snapshot
+      operationId: getTelemetry
+      responses:
+        '200':
+          description: Current TelemetryState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryState'
+  /power:
+    get:
+      summary: Get current power allocation
+      operationId: getPowerAllocation
+      responses:
+        '200':
+          description: Current allocation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PowerAllocation'
+    post:
+      summary: Set power allocation
+      operationId: setPowerAllocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PowerAllocation'
+      responses:
+        '200':
+          description: Updated allocation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PowerAllocation'
+        '400':
+          description: Invalid allocation (sum != 100)
+  /alerts:
+    get:
+      summary: List active alerts
+      operationId: listAlerts
+      responses:
+        '200':
+          description: Active alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alert'
+  /script:
+    post:
+      summary: Load or replace autopilot script
+      operationId: loadScript
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Script loaded result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScriptStatus'
+        '400':
+          description: Compilation error
+    delete:
+      summary: Deactivate autopilot script
+      operationId: deactivateScript
+      responses:
+        '204':
+          description: Deactivated
+  /replay:
+    post:
+      summary: Start replay at timestamp (ms since epoch)
+      operationId: startReplay
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startTimestamp:
+                  type: integer
+              required: [startTimestamp]
+      responses:
+        '202':
+          description: Replay initiated
+    delete:
+      summary: Stop replay and resume live telemetry
+      operationId: stopReplay
+      responses:
+        '204':
+          description: Stopped
+  /settings/thresholds:
+    get:
+      summary: Get current anomaly thresholds
+      operationId: getThresholds
+      responses:
+        '200':
+          description: Threshold config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThresholdConfig'
+    put:
+      summary: Update anomaly thresholds
+      operationId: updateThresholds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThresholdConfig'
+      responses:
+        '200':
+          description: Updated config
+        '400':
+          description: Validation error
+components:
+  schemas:
+    TelemetryState:
+      type: object
+      properties:
+        altitude: { type: number }
+        verticalVelocity: { type: number }
+        thrustPercent: { type: number, minimum: 0, maximum: 100 }
+        fuelRemaining: { type: number, minimum: 0, maximum: 100 }
+        stabilityIndex: { type: number, minimum: 0, maximum: 1 }
+        timestamp: { type: integer }
+      required: [altitude, verticalVelocity, thrustPercent, fuelRemaining, stabilityIndex, timestamp]
+    PowerAllocation:
+      type: object
+      properties:
+        lifeSupport: { type: integer, minimum: 0 }
+        navigation: { type: integer, minimum: 0 }
+        weapons: { type: integer, minimum: 0 }
+        research: { type: integer, minimum: 0 }
+        reserve: { type: integer, minimum: 0 }
+      required: [lifeSupport, navigation, weapons, research, reserve]
+    Alert:
+      type: object
+      properties:
+        id: { type: string }
+        severity: { type: string, enum: [CRITICAL, WARNING, INFO] }
+        message: { type: string }
+        activeSince: { type: integer }
+        acknowledged: { type: boolean }
+      required: [id, severity, message, activeSince, acknowledged]
+    ScriptStatus:
+      type: object
+      properties:
+        status: { type: string, enum: [VALID, ERROR, RUNNING, TIMEOUT] }
+        lastError: { type: string, nullable: true }
+      required: [status]
+    ThresholdConfig:
+      type: object
+      properties:
+        radiationSpikeThreshold: { type: number, minimum: 0 }
+        radiationConsecSamples: { type: integer, minimum: 1 }
+        tempDelta: { type: number, minimum: 0 }
+        tempWindowMs: { type: integer, minimum: 100 }
+        pressureVariance: { type: number, minimum: 0 }
+      required: [radiationSpikeThreshold, radiationConsecSamples, tempDelta, tempWindowMs, pressureVariance]

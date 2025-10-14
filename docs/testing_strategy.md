@@ -84,9 +84,9 @@ Use when:
 - Generate *draft* tests; prune assertions that reference internals.
 - Always rewrite AI-generated comments to ensure accuracy.
 
-## 12. Example Minimal Feature Test Skeleton (Pseudo C++)
+## 12. Example Minimal Feature Test Skeleton (GoogleTest C++)
 ```cpp
-TEST(Orders, AddsOrderVisibleInTable) {
+TEST(OrdersTest, AddsOrderVisibleInTable) {
     // Arrange (Behavior spec: Adds new order, visible with correct fields)
     OrdersController ctl; // high-level facade
     auto initialCount = ctl.orderCount();
@@ -103,13 +103,16 @@ TEST(Orders, AddsOrderVisibleInTable) {
 }
 ```
 
-## 13. Migration Strategy for Legacy Tests
+## 13. Framework Notes
+GoogleTest/GoogleMock chosen for: widespread adoption, rich matcher ecosystem, native mocking support, strong CI tooling examples. Sections-style structuring formerly planned (Catch2) replaced by explicit test fixture patterns if needed. No migration cost (decision changed pre-implementation).
+
+## 14. Migration Strategy for Legacy Tests
 1. Identify class-focused tests that duplicate feature coverage.
 2. Merge assertions into feature test where missing.
 3. Remove redundant unit tests.
 4. Keep a thin unit layer for algorithmic invariants only.
 
-## 14. Metrics (Future)
+## 15. Metrics (Future)
 - Feature Test to Unit Test Ratio target: ~1:1 or lean toward feature tests.
 - Flakiness threshold auto-reported; sustained breach blocks merge.
 
