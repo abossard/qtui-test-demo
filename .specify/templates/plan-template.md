@@ -31,7 +31,16 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+The following MUST be evidenced (link to lines / test diffs):
+
+1. Simplicity (Principle I): No unnecessary state, duplication, or premature abstraction introduced.
+2. Deep Module (Principle II): Public API surface minimal; invariants documented.
+3. Behavior-First TDD (Principle III): Behavior Specification (inputs, triggers, observable outcomes, invariants, edge cases) authored; failing feature-level blackbox test present before implementation.
+4. Deterministic Testability (Principle IV): Explicit synchronization strategy (signals/properties) – no arbitrary sleeps.
+5. Example Integrity (Principle V): New example build + test commands documented; prior examples unaffected.
+6. Blackbox Discipline: Tests avoid over-specifying internals (no class-count, private method, or call-sequence assertions without justification).
+7. Flakiness Budget: Any touched GUI test has historical flakiness <1% or remediation plan attached.
+8. TODOs: Any remaining TODO(...) items justified with issue link.
 
 ## Project Structure
 

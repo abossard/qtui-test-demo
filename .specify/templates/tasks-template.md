@@ -43,7 +43,7 @@ description: "Task list template for feature implementation"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Project initialization and basic structure (ensure Principle I & II foundations; add feature-level blackbox test harnesses for Principle III; establish logging / signal patterns for Principle IV)
 
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
@@ -53,7 +53,12 @@ description: "Task list template for feature implementation"
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented. MUST include:
+- Feature-level (unit-of-behavior) test harness (Principle III)
+- Unit + integration test harness (Principle III supporting)
+- GUI test harness (Squish or equivalent) with stable object naming guidelines (Principle III & IV)
+- Logging / diagnostic strategy (Principle IV)
+- Example build script ensuring isolated builds (Principle V)
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
@@ -78,12 +83,18 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+**NOTE: Write the Behavior Specification and feature-level blackbox test FIRST, ensure it FAILS before implementation**
 
 - [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
+
+Add tasks if needed:
+- [ ] T0XX [US1] Confirm synchronization strategy (signals/properties) documented (Principle IV)
+- [ ] T0XX [US1] Add/Update example README with purpose & principle mapping (Principle V)
+- [ ] T0XX [US1] Author Behavior Specification file specs/[###-feature]/behavior.md (Principle III)
+- [ ] T0XX [US1] Create failing feature-level blackbox test tests/integration/test_[feature]_behavior.cpp (Principle III)
 
 - [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
 - [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
@@ -109,6 +120,12 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 2
 
+Add tasks if needed:
+- [ ] T0YY [US2] Validate no shallow abstractions added (Principle II)
+- [ ] T0YY [US2] Update flakiness report if GUI tests modified
+- [ ] T0YY [US2] Add/Update Behavior Specification changes (Principle III)
+- [ ] T0YY [US2] Add failing feature-level test before changes (Principle III)
+
 - [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
 - [ ] T021 [US2] Implement [Service] in src/services/[service].py
 - [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
@@ -130,6 +147,10 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 3
+
+Add tasks if needed:
+- [ ] T0ZZ [US3] Review example isolation & build script unaffected (Principle V)
+- [ ] T0ZZ [US3] Behavior spec delta & new blackbox test (Principle III)
 
 - [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
 - [ ] T027 [US3] Implement [Service] in src/services/[service].py

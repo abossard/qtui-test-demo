@@ -109,6 +109,27 @@
 
 ### Measurable Outcomes
 
+### Behavior Specification (Feature-Level, Pre-Test)
+Provide a concise, implementation-agnostic behavior description for this feature or story slice:
+- Purpose / value statement
+- Inputs / triggers (events, user actions, signals)
+- Observable outputs (UI changes, signals emitted, state deltas)
+- Invariants (must always hold) & edge reactions
+- Non-goals (explicitly excluded behavior)
+
+This specification MUST exist before writing the first failing feature-level blackbox test.
+
+### Constitution Alignment (Mandatory References)
+
+- Simplicity (I): Describe how each story avoids needless state / duplication.
+- Deep Module (II): Note any new public APIs & their invariants.
+- Behavior-First TDD (III): Link to Behavior Specification file + list planned failing feature-level test name(s).
+- Deterministic Testability (IV): Define synchronization points (signals, properties, waits) – no arbitrary sleeps.
+- Example Integrity (V): How the story's example remains buildable & isolated; test command snippet.
+- Blackbox Discipline: Confirm tests avoid asserting internal implementation details.
+
+Any deviation MUST include justification + issue link.
+
 - **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
