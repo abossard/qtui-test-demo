@@ -15,8 +15,16 @@ enable_testing()
 
 # Placeholder smoke test target (will be replaced / expanded in Phase 2)
 add_executable(compile_smoke unit/compile_smoke.cpp)
-# Use main from GTest for simplicity
 target_link_libraries(compile_smoke PRIVATE GTest::gtest_main)
+
+if (TARGET space_cockpit_core)
+  add_executable(feature_flight_console
+    feature/test_flight_console_behavior.cpp
+  )
+  target_link_libraries(feature_flight_console PRIVATE GTest::gtest Qt6::Core space_cockpit_core)
+  set_property(TARGET feature_flight_console PROPERTY CXX_STANDARD 23)
+  add_test(NAME feature_flight_console COMMAND feature_flight_console)
+endif()
 
 # Ensure consistent standard (inherit from parent policy if available)
 set_property(TARGET compile_smoke PROPERTY CXX_STANDARD 23)

@@ -27,18 +27,18 @@ Purpose: Repository/project scaffolding & directories, build system skeleton, CI
 ## Phase 2: Foundational (Blocking Prerequisites)
 Purpose: Core primitives & harnesses required by ANY story. No story work until complete (Constitution Gate).
 
-- [ ] T007 (Foundational) Implement minimal `SimulationCore` interface header (no logic): `src/core/SimulationCore.h`
-- [ ] T008 [P] (Foundational) Implement tick loop stub (manual trigger) + signal adapter skeleton: `src/adapters/SimulationController.*`
-- [ ] T009 [P] (Foundational) Introduce `TelemetryState` & `PowerAllocation` headers in `src/core/types.h`
-- [ ] T010 [P] (Foundational) Add logging categories enum & helper: `src/core/Log.h` (categories from research)
-- [ ] T011 (Foundational) Add GoogleTest feature-level harness util: `tests/feature/SignalTestHarness.h`
-- [ ] T012 [P] (Foundational) Introduce metrics recorder stub: `src/services/MetricsRecorder.*`
-- [ ] T013 [P] (Foundational) Introduce `ThemeService` header stub with enum + signal: `src/services/ThemeService.*`
-- [ ] T014 (Foundational) Add `Alert` struct + `AlertBus` header stub: `src/services/AlertBus.*`
-- [ ] T015 (Foundational) Add `ReplayService` & `ReplayBuffer` stubs: `src/services/ReplayService.*`
-- [ ] T016 (Foundational) Add `ScriptSandbox` stub linking to QJSEngine (no execution yet): `src/services/ScriptSandbox.*`
-- [ ] T017 (Foundational) Add `ThresholdConfig` struct & validation fn: `src/core/ThresholdConfig.*`
-- [ ] T018 (Foundational) Feature-level failing scaffold test placeholder: `tests/feature/test_flight_console_behavior.cpp` (EXPECT_TRUE(false) placeholder)
+- [X] T007 (Foundational) Implement minimal `SimulationCore` interface header (no logic): `src/core/SimulationCore.h`
+- [X] T008 [P] (Foundational) Implement tick loop stub (manual trigger) + signal adapter skeleton: `src/adapters/SimulationController.*`
+- [X] T009 [P] (Foundational) Introduce `TelemetryState` & `PowerAllocation` headers in `src/core/types.h`
+- [X] T010 [P] (Foundational) Add logging categories enum & helper: `src/core/Log.h` (categories from research)
+- [X] T011 (Foundational) Add GoogleTest feature-level harness util: `tests/feature/SignalTestHarness.h`
+- [X] T012 [P] (Foundational) Introduce metrics recorder stub: `src/services/MetricsRecorder.*`
+- [X] T013 [P] (Foundational) Introduce `ThemeService` header stub with enum + signal: `src/services/ThemeService.*`
+- [X] T014 (Foundational) Add `Alert` struct + `AlertBus` header stub: `src/services/AlertBus.*`
+- [X] T015 (Foundational) Add `ReplayService` & `ReplayBuffer` stubs: `src/services/ReplayService.*`
+- [X] T016 (Foundational) Add `ScriptSandbox` stub linking to QJSEngine (no execution yet): `src/services/ScriptSandbox.*`
+- [X] T017 (Foundational) Add `ThresholdConfig` struct & validation fn: `src/core/ThresholdConfig.*`
+- [X] T018 (Foundational) Feature-level failing scaffold test placeholder: `tests/feature/test_flight_console_behavior.cpp` (EXPECT_TRUE(false) placeholder)
 **Checkpoint**: All foundational headers + failing placeholder test exist; build system compiles stubs.
 
 ## Phase 3: User Story 1 - Core Flight Console (Priority: P1) 🎯 MVP

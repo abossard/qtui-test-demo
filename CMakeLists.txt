@@ -2,6 +2,17 @@ cmake_minimum_required(VERSION 3.24)
 
 project(SpaceCockpitDemo LANGUAGES CXX)
 
+# --- Testing framework bootstrap (must be before add_subdirectory(tests)) ---
+# Historically we placed enable_testing() inside tests/CMakeLists.txt, which causes
+# CTest to generate a tests/CTestTestfile.cmake but NOT a top-level CTestTestfile.cmake.
+# Some invocations like `ctest --test-dir build --output-on-failure` rely on the
+# presence of the top-level test file; without it you may see "No tests were found!!!".
+# Calling include(CTest) + enable_testing() here ensures top-level discovery.
+include(CTest)            # Defines BUILD_TESTING option if not already defined
+if (BUILD_TESTING)
+  enable_testing()
+endif()
+
 option(ENABLE_SPACE_COCKPIT "Build Space Cockpit Kitchensink feature" ON)
 
 # Enforce C++23 (fallback to 20 with warning if unsupported)
@@ -42,14 +53,15 @@ if (ENABLE_SPACE_COCKPIT)
     src/services/ScriptSandbox.h src/services/ScriptSandbox.cpp
     src/adapters/SimulationController.h src/adapters/SimulationController.cpp
   )
-  target_link_libraries(space_cockpit_core PUBLIC Qt6::Core)
+  # Add Qt6::Qml for QJSEngine (ScriptSandbox)
+  target_link_libraries(space_cockpit_core PUBLIC Qt6::Core Qt6::Qml)
   target_compile_features(space_cockpit_core PUBLIC cxx_std_23)
   target_include_directories(space_cockpit_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
   add_executable(space_cockpit
     src/ui/main.cpp
   )
-  target_link_libraries(space_cockpit PRIVATE space_cockpit_core Qt6::Core Qt6::Widgets)
+  target_link_libraries(space_cockpit PRIVATE space_cockpit_core Qt6::Core Qt6::Widgets Qt6::Qml)
   target_compile_definitions(space_cockpit PRIVATE ENABLE_SPACE_COCKPIT=1)
   target_compile_features(space_cockpit PRIVATE cxx_std_23)
 endif()
@@ -60,3 +72,4 @@ add_subdirectory(tests)
 message(STATUS "Configure Summary:")
 message(STATUS "  ENABLE_SPACE_COCKPIT = ${ENABLE_SPACE_COCKPIT}")
 message(STATUS "  C++ Standard        = ${CMAKE_CXX_STANDARD}")
+message(STATUS "  BUILD_TESTING       = ${BUILD_TESTING}")
