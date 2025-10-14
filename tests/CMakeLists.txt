@@ -21,7 +21,8 @@ if (TARGET space_cockpit_core)
   add_executable(feature_flight_console
     feature/test_flight_console_behavior.cpp
   )
-  target_link_libraries(feature_flight_console PRIVATE GTest::gtest Qt6::Core space_cockpit_core)
+  # Use gtest_main to supply the test runner entry point (fixes missing _main linker error)
+  target_link_libraries(feature_flight_console PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
   set_property(TARGET feature_flight_console PROPERTY CXX_STANDARD 23)
   add_test(NAME feature_flight_console COMMAND feature_flight_console)
 endif()
