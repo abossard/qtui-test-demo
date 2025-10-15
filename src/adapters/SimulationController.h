@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include <QTimer>
 #include "core/types.h"
 
 class SimulationCore; // fwd
