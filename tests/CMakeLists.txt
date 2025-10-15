@@ -25,6 +25,22 @@ if (TARGET space_cockpit_core)
   target_link_libraries(feature_flight_console PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
   set_property(TARGET feature_flight_console PROPERTY CXX_STANDARD 23)
   add_test(NAME feature_flight_console COMMAND feature_flight_console)
+  
+  # Unit physics red test (T021) – will fail until physics implemented
+  add_executable(unit_simulation_physics
+    unit/test_simulation_physics.cpp
+  )
+  target_link_libraries(unit_simulation_physics PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
+  set_property(TARGET unit_simulation_physics PROPERTY CXX_STANDARD 23)
+  add_test(NAME unit_simulation_physics COMMAND unit_simulation_physics)
+
+  # Low fuel alert test
+  add_executable(unit_low_fuel_alert
+    unit/test_low_fuel_alert.cpp
+  )
+  target_link_libraries(unit_low_fuel_alert PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
+  set_property(TARGET unit_low_fuel_alert PROPERTY CXX_STANDARD 23)
+  add_test(NAME unit_low_fuel_alert COMMAND unit_low_fuel_alert)
 endif()
 
 # Ensure consistent standard (inherit from parent policy if available)

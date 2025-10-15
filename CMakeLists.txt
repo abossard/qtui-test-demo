@@ -44,6 +44,7 @@ if (ENABLE_SPACE_COCKPIT)
   add_library(space_cockpit_core
     src/core/types.h
     src/core/SimulationCore.h
+    src/core/SimulationCore.cpp
     src/core/Log.h
     src/core/ThresholdConfig.h
     src/services/MetricsRecorder.h src/services/MetricsRecorder.cpp

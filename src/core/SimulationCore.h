@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include "core/types.h"
+class AlertBus; // forward decl
 
 // Minimal SimulationCore interface (Task T007)
 class SimulationCore : public QObject {
@@ -9,10 +10,23 @@ public:
   explicit SimulationCore(QObject* parent = nullptr) : QObject(parent) {}
   virtual ~SimulationCore() = default;
 
-  // Set desired thrust percent (will be clamped 0..100 in implementation phase)
-  virtual void setThrustPercent(double /*pct*/) {}
+  // Optional alert bus injection (for low fuel alert). Not owning.
+  void setAlertBus(AlertBus* bus) { alertBus_ = bus; }
 
-  // Return last known telemetry snapshot
+  // --- API (Early Red Phase Stubs) --------------------------------------------------
+  // Future: clamp 0..100 and emit telemetry after each tick()
+  virtual void setThrustPercent(double pct);
+  virtual double thrustPercent() const { return thrustPercent_; }
+
+  // Called by controller / simulation loop (dt in seconds)
+  // Stub: does not yet update velocity/altitude/fuel -> ensures tests fail logically.
+  virtual void tick(double dtSeconds);
+
+  virtual double velocity() const { return velocity_; }
+  virtual double altitude() const { return altitude_; }
+  virtual double fuelLevel() const { return fuelLevel_; }
+
+  // Return last known telemetry snapshot (currently unused placeholder structure)
   virtual TelemetryState current() const { return currentState_; }
 
 signals:
@@ -20,4 +34,10 @@ signals:
 
 protected:
   TelemetryState currentState_{}; // placeholder state storage
+  double thrustPercent_{0.0};
+  double velocity_{0.0};
+  double altitude_{0.0};
+  double fuelLevel_{100.0};
+  bool lowFuelAlertActive_{false};
+  AlertBus* alertBus_{nullptr};
 };
