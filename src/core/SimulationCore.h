@@ -25,6 +25,8 @@ public:
   virtual double velocity() const { return velocity_; }
   virtual double altitude() const { return altitude_; }
   virtual double fuelLevel() const { return fuelLevel_; }
+  virtual void refuel(double amount);
+  virtual void setFuel(double pct);
 
   // Return last known telemetry snapshot (currently unused placeholder structure)
   virtual TelemetryState current() const { return currentState_; }
@@ -38,6 +40,12 @@ protected:
   double velocity_{0.0};
   double altitude_{0.0};
   double fuelLevel_{100.0};
+  // Stability computation
+  double stabilityIndex_{1.0};
+  static constexpr int kThrustHistoryCapacity = 32;
+  double thrustHistory_[kThrustHistoryCapacity]{}; // circular buffer
+  int thrustHistorySize_{0};
+  int thrustHistoryHead_{0};
   bool lowFuelAlertActive_{false};
   AlertBus* alertBus_{nullptr};
 };

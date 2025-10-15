@@ -1,0 +1,36 @@
+#pragma once
+#include <QWidget>
+#include <QLabel>
+#include <QPointer>
+#include <cmath>
+#include <QString>
+#include <QColor>
+#include "core/types.h"
+
+class AlertBus;
+class SimulationCore;
+class QPushButton;
+
+class FlightConsolePanel : public QWidget {
+  Q_OBJECT
+public:
+  explicit FlightConsolePanel(QWidget* parent = nullptr);
+  void attachCore(SimulationCore* core, AlertBus* alertBus);
+
+private slots:
+  void onTelemetry(const TelemetryState& ts);
+  void onAlert(const class Alert& alert);
+
+private:
+  QLabel* altitudeLabel_{};
+  QLabel* velocityLabel_{};
+  QLabel* fuelLabel_{};
+  QLabel* stabilityLabel_{};
+  QLabel* lowFuelIndicator_{};
+  QLabel* alertBanner_{};
+  QPushButton* refuelButton_{};
+  QPointer<SimulationCore> core_;
+  QPointer<AlertBus> alertBus_;
+  void updateLowFuel(double fuelPct);
+  void updateStability(double idx);
+};

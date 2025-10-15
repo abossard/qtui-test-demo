@@ -39,6 +39,32 @@ Create initial CMakeLists (future):
 6. Load autopilot script sample → activate → watch thrust adjustments.
 7. Trigger replay (toolbar) → live updates pause → scrub timeline → stop → continuity marker logged.
 
+### 4a. Current Running Feature Set (Refuel, Stability, Theming)
+Implemented so far:
+- Physics loop: thrust → acceleration → velocity → altitude + proportional fuel burn.
+- Stability index (0..1): variance-based metric of recent thrust samples (steady thrust ≈ 1.00; volatile thrust lowers score). Color coding: green ≥0.85, amber 0.60–<0.85, red <0.60.
+- Low fuel alert: single WARNING emitted when first crossing below 15% fuel. Alert latch resets automatically once fuel rises back ≥15% (e.g., via refuel) allowing a future re-crossing to emit again.
+- Refuel mechanism: `Refuel +10%` button increments fuel (capped 100%), disabled above ~99.5%. Crossing threshold upward clears the low fuel latch.
+- `FlightConsolePanel` shows altitude, velocity, fuel %, stability index (with color), low fuel status, latest alert banner, and refuel button.
+- `PowerPanel` sliders (life, nav, weapons, research) auto-adjust reserve to keep total = 100.
+- Theming: Dark/Light toggle buttons update a shared palette (default Dark). Theme changes propagate via `ThemeService::themeChanged` carrying palette.
+
+Demo behavior after build:
+1. App starts (Dark theme) with thrust preset (~55%) and begins ticking every 1s.
+2. Altitude & velocity rise; fuel gradually decreases; stability usually near 1 unless you manipulate thrust.
+3. When fuel <15%, low fuel alert emits once (banner visible). Repeated ticks below threshold produce no duplicates.
+4. Press `Refuel +10%` (may need multiple presses) to raise fuel above 15%: low fuel indicator returns to “Fuel OK” and alert latch resets (banner remains until an implementation decides to clear—current behavior leaves last alert text visible).
+5. Burn down again to <15%: a second alert is emitted (validated by test) proving re-arm works.
+6. Toggle Dark/Light: entire window palette updates (no runtime restart required).
+
+Developer notes:
+- Alert emission & re-arm tested via updated `unit_low_fuel_alert` (ensures second alert after refuel) + feature test.
+- Stability behavior covered by `unit_stability_index` (steady vs fluctuating thrust scenarios).
+- Power invariants enforced in `unit_power_distribution` (sum = 100, reserve auto-balancing).
+- Theming: `unit_theme_service` validates emission only on actual theme change (idempotent apply). Palette logic lives in `ThemeService::paletteFor`.
+- Constants centralized in `core/Constants.h` – adjust `kFuelBurnPerSecAtFull` for faster demo cycles.
+- UI now includes refuel + theme toggles; remaining future polish: auto-hide or timeout old alert banner; high-contrast theme (placeholder for accessibility).
+
 ### 5. Testing Strategy (Behavior-First)
 Feature-level tests (added in Phase 2) will:
 1. Start minimal simulation harness (headless, no full UI where possible).
@@ -60,8 +86,9 @@ GUI (Squish) tests (later):
 - Alert stack ordering under multi-alert burst.
 
 ### 6. Accessibility & Theming
-- Palette contrast auto-check (planned utility) validates WCAG AA before merge.
-- Theme switch triggers metrics capture (`theme.switch.ms`).
+- Current: Dark & Light palettes; color contrast chosen for legibility, not yet formally audited.
+- Planned: Add high-contrast theme + automated contrast validation (WCAG AA) pre-commit.
+- Theme switch hook placeholder for metrics (`theme.switch.ms`)—not yet instrumented.
 
 ### 7. Metrics Collection (Planned Hooks)
 Instrumentation points (guarded by build flag):
@@ -71,9 +98,12 @@ Instrumentation points (guarded by build flag):
 - Script execution time
 
 ### 8. Next After Quickstart
-- Add initial CMake scaffolding.
-- Implement SimulationCore with deterministic loop (mockable clock for tests).
-- Author failing feature tests (Phase 2 tasks).
+- (Done) Initial CMake scaffolding.
+- (Done) SimulationCore physics (basic vertical model).
+- (Done) Behavior-first failing tests converted to passing for physics & alert; low fuel alert implemented.
+- (In Progress Soon) Add power redistribution, stability index, and script sandbox integration.
+- (Planned) Theming system & accessibility checks.
+- (Planned) Replay buffering and timeline scrub UI.
 
 ---
 This quickstart evolves with implementation; any deviation requires updating plan Constitution Check evidence.

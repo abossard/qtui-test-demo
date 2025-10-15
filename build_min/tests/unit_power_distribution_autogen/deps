@@ -1,0 +1,7 @@
+unit_power_distribution_autogen/timestamp: \
+	/Users/abossard/Desktop/projects/qtui-test-demo/tests/CMakeLists.txt \
+	/Users/abossard/Desktop/projects/qtui-test-demo/tests/unit/test_power_distribution.cpp \
+	/opt/homebrew/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake \
+	/opt/homebrew/share/cmake/Modules/FetchContent.cmake \
+	/opt/homebrew/share/cmake/Modules/FetchContent/CMakeLists.cmake.in \
+	/opt/homebrew/bin/cmake

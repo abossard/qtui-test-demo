@@ -41,6 +41,30 @@ if (TARGET space_cockpit_core)
   target_link_libraries(unit_low_fuel_alert PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
   set_property(TARGET unit_low_fuel_alert PROPERTY CXX_STANDARD 23)
   add_test(NAME unit_low_fuel_alert COMMAND unit_low_fuel_alert)
+
+  # Stability index tests
+  add_executable(unit_stability_index
+    unit/test_stability_index.cpp
+  )
+  target_link_libraries(unit_stability_index PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
+  set_property(TARGET unit_stability_index PROPERTY CXX_STANDARD 23)
+  add_test(NAME unit_stability_index COMMAND unit_stability_index)
+
+  # Power distribution tests
+  add_executable(unit_power_distribution
+    unit/test_power_distribution.cpp
+  )
+  target_link_libraries(unit_power_distribution PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
+  set_property(TARGET unit_power_distribution PROPERTY CXX_STANDARD 23)
+  add_test(NAME unit_power_distribution COMMAND unit_power_distribution)
+
+  # Theme service tests
+  add_executable(unit_theme_service
+    unit/test_theme_service.cpp
+  )
+  target_link_libraries(unit_theme_service PRIVATE GTest::gtest_main Qt6::Core space_cockpit_core)
+  set_property(TARGET unit_theme_service PROPERTY CXX_STANDARD 23)
+  add_test(NAME unit_theme_service COMMAND unit_theme_service)
 endif()
 
 # Ensure consistent standard (inherit from parent policy if available)

@@ -52,17 +52,22 @@ if (ENABLE_SPACE_COCKPIT)
     src/services/AlertBus.h src/services/AlertBus.cpp
     src/services/ReplayService.h src/services/ReplayService.cpp
     src/services/ScriptSandbox.h src/services/ScriptSandbox.cpp
+    src/services/PowerDistributionService.h
     src/adapters/SimulationController.h src/adapters/SimulationController.cpp
   )
   # Add Qt6::Qml for QJSEngine (ScriptSandbox)
-  target_link_libraries(space_cockpit_core PUBLIC Qt6::Core Qt6::Qml)
+  target_link_libraries(space_cockpit_core PUBLIC Qt6::Core Qt6::Qml Qt6::Gui)
   target_compile_features(space_cockpit_core PUBLIC cxx_std_23)
   target_include_directories(space_cockpit_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
   add_executable(space_cockpit
     src/ui/main.cpp
+    src/ui/FlightConsolePanel.h
+    src/ui/FlightConsolePanel.cpp
+    src/ui/PowerPanel.h
+    src/ui/PowerPanel.cpp
   )
-  target_link_libraries(space_cockpit PRIVATE space_cockpit_core Qt6::Core Qt6::Widgets Qt6::Qml)
+  target_link_libraries(space_cockpit PRIVATE space_cockpit_core Qt6::Core Qt6::Widgets Qt6::Qml Qt6::Gui)
   target_compile_definitions(space_cockpit PRIVATE ENABLE_SPACE_COCKPIT=1)
   target_compile_features(space_cockpit PRIVATE cxx_std_23)
 endif()
