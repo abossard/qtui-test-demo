@@ -13,6 +13,9 @@ public:
   void setThrustPercent(double pct); // forwards to core
   TelemetryState current() const;    // snapshot
 
+  void startTimer(double intervalSec = 0.1); // 10Hz default
+  void stopTimer();
+
 signals:
   void telemetryTick(const TelemetryState&);
 
@@ -21,4 +24,5 @@ public slots:
 
 private:
   SimulationCore* core_{nullptr};
+  QTimer* timer_{nullptr};
 };

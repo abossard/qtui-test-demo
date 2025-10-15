@@ -8,15 +8,15 @@
  *
  *  Rules (initial slice – expanded later):
  *    R1 Thrust percent (0..100) drives positive velocity (>0) within one tick when >0.
- *    R2 Altitude increases monotonically (Δalt > 0) after velocity becomes positive.
+ *    R2 Altitude increases (Δalt > 0) after velocity becomes positive.
  *    R3 Fuel level decreases over time while thrust > 0.
- *    R4 (Deferred) Low fuel (< 15%) raises an alert exactly once per crossing.
+ *    R4 Low fuel (< 15%) raises an alert exactly once per crossing.
  *
  *  Acceptance (this test enforces R1,R2,R3 now; R4 placeholder red assertion for future impl):
  *    Given thrust is set to 60%
  *    When one simulation second elapses
  *    Then velocity should be > 0 and altitude > 0 and fuel level < initial.
- *    And (future) a low fuel alert appears after extended burn (NOT YET IMPLEMENTED).
+ *    And after extended burn when crossing below threshold a single low fuel alert appears.
  *
  *  Red Phase Intent:
  *    SimulationCore::tick currently performs no physics; these assertions MUST fail

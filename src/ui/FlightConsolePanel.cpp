@@ -17,12 +17,18 @@ FlightConsolePanel::FlightConsolePanel(QWidget* parent) : QWidget(parent) {
   alertBanner_->setObjectName("alertBanner");
   alertBanner_->setVisible(false);
   refuelButton_ = new QPushButton("Refuel +10%", this);
+  thrustSlider_ = new QSlider(Qt::Horizontal, this);
+  thrustSlider_->setObjectName("thrustSlider");
+  thrustSlider_->setRange(0,100);
+  thrustSlider_->setValue(55);
   layout->addWidget(altitudeLabel_);
   layout->addWidget(velocityLabel_);
   layout->addWidget(fuelLabel_);
   layout->addWidget(stabilityLabel_);
   layout->addWidget(lowFuelIndicator_);
   layout->addWidget(alertBanner_);
+  layout->addWidget(new QLabel("Thrust %", this));
+  layout->addWidget(thrustSlider_);
   layout->addWidget(refuelButton_);
   setLayout(layout);
   setObjectName("FlightConsolePanel");
@@ -35,6 +41,7 @@ void FlightConsolePanel::attachCore(SimulationCore* core, AlertBus* alertBus) {
     QObject::connect(refuelButton_, &QPushButton::clicked, [this]() {
       if (core_) core_->refuel(10.0);
     });
+    QObject::connect(thrustSlider_, &QSlider::valueChanged, [this](int v){ if (core_) core_->setThrustPercent(static_cast<double>(v)); });
   }
   if (alertBus_) QObject::connect(alertBus_, &AlertBus::alertRaised, this, &FlightConsolePanel::onAlert);
 }

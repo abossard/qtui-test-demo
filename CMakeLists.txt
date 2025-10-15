@@ -45,6 +45,8 @@ if (ENABLE_SPACE_COCKPIT)
     src/core/types.h
     src/core/SimulationCore.h
     src/core/SimulationCore.cpp
+    src/core/StabilityCalculator.h
+    src/core/StabilityCalculator.cpp
     src/core/Log.h
     src/core/ThresholdConfig.h
     src/services/MetricsRecorder.h src/services/MetricsRecorder.cpp

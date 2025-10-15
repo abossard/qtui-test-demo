@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPointer>
+#include <QSlider>
 #include <cmath>
 #include <QString>
 #include <QColor>
@@ -29,6 +30,7 @@ private:
   QLabel* lowFuelIndicator_{};
   QLabel* alertBanner_{};
   QPushButton* refuelButton_{};
+  QSlider* thrustSlider_{};
   QPointer<SimulationCore> core_;
   QPointer<AlertBus> alertBus_;
   void updateLowFuel(double fuelPct);

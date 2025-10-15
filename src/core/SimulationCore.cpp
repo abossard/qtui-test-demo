@@ -4,6 +4,8 @@
 #include "services/AlertBus.h"
 #include <QtGlobal>
 #include <QDateTime>
+#include <QDebug>
+#include "core/StabilityCalculator.h"
 
 namespace { constexpr double kMinFuel = 0.0; constexpr double kMaxFuel = 100.0; }
 
@@ -55,16 +57,7 @@ void SimulationCore::tick(double dtSeconds) {
   currentState_.fuelRemaining = fuelLevel_;
   // Stability: compute variance of thrust history; lower variance -> higher stability
   if (thrustHistorySize_ > 1) {
-    double sum = 0.0; for (int i=0;i<thrustHistorySize_;++i) sum += thrustHistory_[i];
-    double mean = sum / thrustHistorySize_;
-    double varSum = 0.0; for (int i=0;i<thrustHistorySize_;++i) { double d = thrustHistory_[i] - mean; varSum += d*d; }
-    double variance = varSum / (thrustHistorySize_-1);
-    // Normalize: assume max meaningful variance ~ (100^2)/4 for swings 0↔100; use sqrt for stddev
-    double stddev = std::sqrt(variance);
-    double norm = stddev / 50.0; // 0..~2
-    double stability = 1.0 - norm;
-    if (stability < 0.0) stability = 0.0; else if (stability > 1.0) stability = 1.0;
-    stabilityIndex_ = stability;
+    stabilityIndex_ = cockpit::computeStabilityIndex(thrustHistory_, thrustHistorySize_);
   }
   currentState_.stabilityIndex = stabilityIndex_;
   currentState_.timestamp = QDateTime::currentMSecsSinceEpoch();
@@ -79,5 +72,6 @@ void SimulationCore::tick(double dtSeconds) {
     lowFuelAlertActive_ = false;
   }
 
+  qInfo() << "[tick] thrust%=" << thrustPercent_ << " alt=" << altitude_ << " vel=" << velocity_ << " fuel%=" << fuelLevel_ << " stability=" << stabilityIndex_;
   emit telemetryProduced(current());
 }
