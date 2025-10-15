@@ -11,6 +11,7 @@
  *    R2 Altitude increases (Δalt > 0) after velocity becomes positive.
  *    R3 Fuel level decreases over time while thrust > 0.
  *    R4 Low fuel (< 15%) raises an alert exactly once per crossing.
+ *    R5 Stability index remains in green band (>=0.85) under steady thrust after several ticks.
  *
  *  Acceptance (this test enforces R1,R2,R3 now; R4 placeholder red assertion for future impl):
  *    Given thrust is set to 60%
@@ -41,7 +42,7 @@ public:
 // Need Q_OBJECT moc generation in this TU
 #include "test_flight_console_behavior.moc"
 
-TEST(FlightConsoleBehavior, ThrustDrivesVelocityAltitudeAndFuelBurn) {
+TEST(FlightConsoleBehavior, ThrustDrivesVelocityAltitudeFuelBurnAndStableHover) {
   int argc = 0; char** argv = nullptr;
   QCoreApplication app(argc, argv);
   DummySimulationCore core;
@@ -52,11 +53,15 @@ TEST(FlightConsoleBehavior, ThrustDrivesVelocityAltitudeAndFuelBurn) {
 
   // Simulate one second.
   core.tick(1.0);
+  // Additional steady ticks to satisfy stability band (history remains constant -> stable ~1.0)
+  for (int i=0;i<5;++i) core.tick(0.5);
 
   EXPECT_GT(core.thrustPercent(), 0.0) << "Sanity: thrust should have been set";
   EXPECT_GT(core.velocity(), 0.0) << "Velocity should become > 0 when thrust > 0";
   EXPECT_GT(core.altitude(), 0.0) << "Altitude should increase after velocity > 0";
   EXPECT_LT(core.fuelLevel(), initialFuel) << "Fuel should decrease under thrust";
+  TelemetryState st = core.current();
+  EXPECT_GE(st.stabilityIndex, 0.85) << "Stability should be green (>=0.85) under steady thrust";
 }
 
 TEST(FlightConsoleBehavior, LowFuelAlertRaisedOnceWhenCrossingThreshold) {

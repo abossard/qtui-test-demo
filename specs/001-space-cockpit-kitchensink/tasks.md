@@ -54,10 +54,10 @@ Independent Test: Manipulate thrust → vertical velocity positive; hover band s
 - [X] T022 [US1] Implement physics loop (fuel burn & kinematics done; 10Hz timer pending separately under T025). Partial: loop executed manually & via main QTimer; controller timer still open.
 - [X] T023 [P] [US1] Implement hover band calculation + stability index algorithm `src/core/StabilityCalculator.*` (now integrated in `SimulationCore`).
 - [X] T024 [P] [US1] Implement low fuel detection logic (FR-004) in `SimulationCore` with AlertBus emission + re-arm on refuel.
-- [ ] T025 [US1] Wire `SimulationController` to emit tick signal on loop timer (Qt timer) (FR-001) (PENDING – currently ticking from `main.cpp` only).
+- [X] T025 [US1] Wire `SimulationController` to emit tick signal on loop timer (Qt timer) (FR-001) (Completed: 10Hz startTimer integrated; main.cpp now uses controller instead of ad-hoc QTimer.)
 - [X] T026 [US1] Create UI panel stub `src/ui/FlightConsolePanel.*` (panel implemented with labels, refuel button, stability, thrust slider).
 - [X] T027 [US1] Implement throttle slider -> controller/core setThrustPercent connection (slider wired directly to core for now; may revisit to route via controller).
-- [ ] T028 [US1] Update feature test to assert green stability after hover (stability assertion not yet added; threshold logic prepared).
+- [X] T028 [US1] Update feature test to assert green stability after hover (Completed: stability >=0.85 asserted in renamed test ThrustDrivesVelocityAltitudeFuelBurnAndStableHover.)
 - [X] T029 [US1] Add logging events (SIMULATION tick qInfo + UI slider interaction).
 **Checkpoint**: US1 passes all tests (feature + unit). MVP deliverable.
 

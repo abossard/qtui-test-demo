@@ -13,6 +13,7 @@
 #include "ui/PowerPanel.h"
 #include "services/PowerDistributionService.h"
 #include "services/ThemeService.h"
+#include "adapters/SimulationController.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -23,8 +24,9 @@ int main(int argc, char** argv) {
 
   auto* core = new SimulationCore();
   auto* alertBus = new AlertBus();
-  core->setThrustPercent(55.0); // demo thrust
   core->setAlertBus(alertBus);
+  auto* controller = new SimulationController(core, &app);
+  controller->setThrustPercent(55.0); // initial demo thrust
 
   // Container widget
   QWidget window;
@@ -34,7 +36,7 @@ int main(int argc, char** argv) {
   auto* powerService = new PowerDistributionService(&window);
   auto* themeService = new ThemeService(&window);
   powerPanel->attachService(powerService);
-  panel->attachCore(core, alertBus);
+  panel->attachCore(core, alertBus, controller);
 
   // Theme toggle buttons
   auto* darkBtn = new QPushButton("Dark", &window);
@@ -63,10 +65,11 @@ int main(int argc, char** argv) {
   window.resize(760, 300);
   window.show();
 
-  // Drive simulation with a 1s tick.
-  auto* timer = new QTimer(&window);
-  QObject::connect(timer, &QTimer::timeout, [core]() { core->tick(1.0); });
-  timer->start(1000);
+  // Drive simulation at 10Hz using controller timer (100ms interval)
+  controller->startTimer(0.1);
+
+  // Optional: connect controller telemetryTick if future consumers need adapter signal
+  // QObject::connect(controller, &SimulationController::telemetryTick, [](const TelemetryState&){ /* hook */ });
 
   return app.exec();
 }

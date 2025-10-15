@@ -2,6 +2,7 @@
 #include "services/AlertBus.h"
 #include "core/SimulationCore.h"
 #include "core/Constants.h"
+#include "adapters/SimulationController.h"
 #include <QVBoxLayout>
 #include <QPalette>
 #include <QPushButton>
@@ -34,10 +35,14 @@ FlightConsolePanel::FlightConsolePanel(QWidget* parent) : QWidget(parent) {
   setObjectName("FlightConsolePanel");
 }
 
-void FlightConsolePanel::attachCore(SimulationCore* core, AlertBus* alertBus) {
-  core_ = core; alertBus_ = alertBus;
-  if (core_) {
+void FlightConsolePanel::attachCore(SimulationCore* core, AlertBus* alertBus, SimulationController* controller) {
+  core_ = core; alertBus_ = alertBus; controller_ = controller;
+  if (controller_) {
+    QObject::connect(controller_, &SimulationController::telemetryTick, this, &FlightConsolePanel::onTelemetry);
+  } else if (core_) {
     QObject::connect(core_, SIGNAL(telemetryProduced(TelemetryState)), this, SLOT(onTelemetry(TelemetryState)));
+  }
+  if (core_) {
     QObject::connect(refuelButton_, &QPushButton::clicked, [this]() {
       if (core_) core_->refuel(10.0);
     });
